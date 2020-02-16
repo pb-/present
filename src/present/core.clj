@@ -1,10 +1,12 @@
 (ns present.core
-  (:require [instaparse.core :as insta])
+  (:require [instaparse.core :as insta]
+            [present.render :as r]
+            [present.state :as s])
   (:import [com.googlecode.lanterna.terminal.ansi UnixTerminal]
            [com.googlecode.lanterna.terminal TerminalResizeListener]
            [com.googlecode.lanterna.screen TerminalScreen]))
 
-(def state-storage (atom {:loading true}))
+(def state-storage (atom (s/initial)))
 
 (defn load-presentation [filename]
   ((insta/parser (clojure.java.io/resource "grammar.bnf")) (slurp filename)))
@@ -12,23 +14,18 @@
 (comment
   (load-presentation "sample-presentations/hello-world"))
 
-(defn render [screen]
-  (let [text (.newTextGraphics screen)]
-    (.clear screen)
-    (.doResizeIfNecessary screen)
-    (.putString text 1 1 "hello world")
-    (.putString text 1 2 (str "term size " (.toString (.getTerminalSize screen))))
-    (.refresh screen)))
-
-
 (defn -main []
   (let [screen (TerminalScreen. (UnixTerminal.))]
     (.startScreen screen)
-    (.setCursorPosition screen nil)
-    (.addResizeListener
-      (.getTerminal screen)
-      (reify TerminalResizeListener
-        (onResized [this term new-size] (render screen))))
-    (render screen)
-    (.readInput screen)
-    (.stopScreen screen)))
+    (try 
+      (.setCursorPosition screen nil)
+      (.addResizeListener
+        (.getTerminal screen)
+        (reify TerminalResizeListener
+          (onResized [this term new-size] (r/render! screen @state-storage))))
+      (r/render! screen @state-storage)
+      (.readInput screen)
+      (.stopScreen screen)
+      (catch Exception e
+        (.stopScreen screen)
+        (.printStackTrace e)))))

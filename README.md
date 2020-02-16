@@ -8,20 +8,23 @@ Present is a presentation tool for creating simple text-based presentations. Pre
 From <sample-presentations/hello-world>.
 
 ```
+@ version 1
 # slide
-# layout: center
-Using present
+:
+|Using present
 
-John Doe
-
+|John Doe
+:
 
 # slide
 Some slide with a
 two-line title
-
+:
 * point one
- * sub point
+ * subpoint
+
 * point two
+:
 ```
 
 
