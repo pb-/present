@@ -23,8 +23,11 @@
         (.getTerminal screen)
         (reify TerminalResizeListener
           (onResized [this term new-size] (r/render! screen @state-storage))))
-      (r/render! screen @state-storage)
-      (.readInput screen)
+      (while (not (:exit @state-storage))
+        (r/render! screen @state-storage)
+        (swap! state-storage s/update-state
+               {:message :key-pressed
+                :key (.readInput screen)}))
       (.stopScreen screen)
       (catch Exception e
         (.stopScreen screen)
