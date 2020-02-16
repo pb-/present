@@ -1,0 +1,9 @@
+{:deps
+ {com.googlecode.lanterna/lanterna {:mvn/version "3.0.2"}
+  instaparse {:mvn/version "1.4.10"}}
+ :paths ["src" "resources"]
+ :aliases {:nrepl
+           {:extra-deps
+            {nrepl/nrepl {:mvn/version "0.6.0"}}
+            :main-opts
+            ["-m" "nrepl.cmdline"]}}}
