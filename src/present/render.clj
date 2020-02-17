@@ -1,4 +1,5 @@
 (ns present.render
+  (:require [clojure.string :as string])
   (:import [com.googlecode.lanterna TextColor$ANSI]))
 
 (defn ^:private make-centered [text columns]
@@ -13,15 +14,21 @@
     (center! (dec middle) "Terminal too small")
     (center! (inc middle) "Try making it bigger")))
 
+(defn ^:private load-error! [text error]
+  (.setForegroundColor text TextColor$ANSI/RED)
+  (doseq [[line row] (map vector (string/split-lines error) (rest (range)))]
+    (.putString text 1 row line)))
+
 (defn render! [screen state]
   (let [term-size (or (.doResizeIfNecessary screen) (.getTerminalSize screen))
         text (.newTextGraphics screen)]
     (.clear screen)
-    (if (< (.getColumns term-size) 70)
-      (too-small! text term-size)
-      (do
-        (.putString text 1 1 "hello world")
-        (.putString text 1 2 (str "term size " (.toString term-size)))))
+    (cond
+      (:load-error state) (load-error! text (:load-error state))
+      (< (.getColumns term-size) 70) (too-small! text term-size)
+      :else (do
+              (.putString text 1 1 "hello world")
+              (.putString text 1 2 (str "term size " (.toString term-size)))))
     (.refresh screen)))
 
 

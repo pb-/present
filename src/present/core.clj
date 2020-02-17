@@ -9,13 +9,19 @@
 (def state-storage (atom (s/initial)))
 
 (defn load-presentation [filename]
-  ((insta/parser (clojure.java.io/resource "grammar.bnf")) (slurp filename)))
+  (let [result ((insta/parser (clojure.java.io/resource "grammar.bnf")) (slurp filename))]
+    (if (insta/failure? result)
+      {:message :load-failed
+       :load-error (with-out-str (print (insta/get-failure result)))}
+      {:message :load-succeeded
+       :slides (into [] result)})))
 
 (comment
   (load-presentation "sample-presentations/hello-world"))
 
 (defn -main []
   (let [screen (TerminalScreen. (UnixTerminal.))]
+    (swap! state-storage s/update-state (load-presentation "sample-presentations/hello-world"))
     (.startScreen screen)
     (try 
       (.setCursorPosition screen nil)
