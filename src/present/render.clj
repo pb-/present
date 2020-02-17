@@ -28,7 +28,8 @@
       (< (.getColumns term-size) 70) (too-small! text term-size)
       :else (do
               (.putString text 1 1 "hello world")
-              (.putString text 1 2 (str "term size " (.toString term-size)))))
+              (.putString text 1 2 (str "term size " (.toString term-size)))
+              (.putString text 1 3 (str (get (:slides state) (:current-slide state))))))
     (.refresh screen)))
 
 
