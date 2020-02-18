@@ -19,17 +19,24 @@
   (doseq [[line row] (map vector (string/split-lines error) (rest (range)))]
     (.putString text 1 row line)))
 
+(defn ^:private debug! [text term-size state]
+  (.setForegroundColor text TextColor$ANSI/WHITE)
+  (.putString text 0 0 (str "DEBUG"))
+  (.putString text 1 1 (str "current term size " (.toString term-size)))
+  (.putString text 1 2 (format "min term size {%dx%d}" (:min-columns state) (:min-rows state))))
+
 (defn render! [screen state]
   (let [term-size (or (.doResizeIfNecessary screen) (.getTerminalSize screen))
         text (.newTextGraphics screen)]
     (.clear screen)
     (cond
       (:load-error state) (load-error! text (:load-error state))
-      (< (.getColumns term-size) 70) (too-small! text term-size)
+      (:debug state) (debug! text term-size state)
+      (or
+        (< (.getColumns term-size) (:min-columns state))
+        (< (.getRows term-size) (:min-rows state))) (too-small! text term-size)
       :else (do
-              (.putString text 1 1 "hello world")
-              (.putString text 1 2 (str "term size " (.toString term-size)))
-              (.putString text 1 3 (str (get (:slides state) (:current-slide state))))))
+              (.putString text 1 1 (str (get (:slides state) (:current-slide state))))))
     (.refresh screen)))
 
 
