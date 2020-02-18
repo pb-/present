@@ -4,12 +4,12 @@
 
 (defn ^:private make-centered [text columns]
   (fn [row string]
-    (let [column (unchecked-divide-int (- columns (count string)) 2)]
+    (let [column (quot (- columns (count string)) 2)]
       (.putString text column row string))))
 
 (defn ^:private too-small! [text term-size]
   (let [center! (make-centered text (.getColumns term-size))
-        middle (unchecked-divide-int (.getRows term-size) 2)]
+        middle (quot (.getRows term-size) 2)]
     (.setForegroundColor text TextColor$ANSI/RED)
     (center! (dec middle) "Terminal too small")
     (center! (inc middle) "Try making it bigger")))
