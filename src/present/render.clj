@@ -31,7 +31,7 @@
     (.clear screen)
     (cond
       (:load-error state) (load-error! text (:load-error state))
-      (:debug state) (debug! text term-size state)
+      (:debug? state) (debug! text term-size state)
       (or
         (< (.getColumns term-size) (:min-columns state))
         (< (.getRows term-size) (:min-rows state))) (too-small! text term-size)

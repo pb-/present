@@ -2,8 +2,8 @@
   (:import [com.googlecode.lanterna.input KeyType]))
 
 (defn initial []
-  {:loading true
-   :debug false})
+  {:loading? true
+   :debug? false})
 
 (defn ^:private slide-min-rows [slide]
   (dec (count slide)))
@@ -29,7 +29,7 @@
     ([:escape nil] [:character \q]) (assoc state :exit true)
     [:character \j] (update state :current-slide #(min (inc %) (dec (count (:slides state)))))
     [:character \k] (update state :current-slide #(max (dec %) 0))
-    [:character \d] (update state :debug not)
+    [:character \d] (update state :debug? not)
     state))
 
 (defn update-state [state message]
@@ -37,11 +37,11 @@
     :key-pressed (update-key state message)
     :load-failed (-> state
                      (dissoc :slides)
-                     (assoc :loading false
+                     (assoc :loading? false
                             :load-error (:load-error message)))
     :load-succeeded (-> state
                         (dissoc :load-error)
-                        (assoc :loading false
+                        (assoc :loading? false
                                :slides (:slides message)
                                :current-slide 0
                                :min-columns (slides-min-columns (:slides message))
