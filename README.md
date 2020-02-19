@@ -28,6 +28,20 @@ two-line title
 ```
 
 
+## Key bindings
+
+Vim like, generally.
+
+| Key(s)                                  | Action                             |
+| --------------------------------------- | ---------------------------------- |
+| q (escape)                              | Quit                               |
+| j l (space) (enter) (arrow right/down)  | Next slide                         |
+| h k (backspace) (arrow left/up)         | Previous slide                     |
+| g (home)                                | First slide                        |
+| G (end)                                 | Last slide                         |
+| d                                       | Show debug information             |
+
+
 ## Development
 
 A recent version of Clojure is required.
