@@ -27,19 +27,21 @@
   (.putString text 1 3 (format "min term size {%dx%d}" (:min-columns state) (:min-rows state))))
 
 (defn ^:private compute-spaces [rows total-space]
-  (let [indexes (keep-indexed #(when %2 %1) rows)
-        index-map (into {} (map-indexed (fn [i v] [v i]) indexes))
-        num-verticals (count index-map)
-        vertical-space (+ (- total-space (count rows)) num-verticals)
-        pad-index-bound (- num-verticals (mod vertical-space num-verticals))]
-    (map-indexed
-      (fn [i row]
-        (if row
-          (+
-           (quot vertical-space num-verticals)
-           (if (>= (index-map i) pad-index-bound) 1 0))
-          1))
-      rows)))
+  (let [indexes (keep-indexed #(when %2 %1) rows)]
+    (if (empty? indexes)
+      (repeat (count rows) 1)
+      (let [index-map (into {} (map-indexed (fn [i v] [v i]) indexes))
+            num-verticals (count index-map)
+            vertical-space (+ (- total-space (count rows)) num-verticals)
+            pad-index-bound (- num-verticals (mod vertical-space num-verticals))]
+        (map-indexed
+          (fn [i row]
+            (if row
+              (+
+               (quot vertical-space num-verticals)
+               (if (>= (index-map i) pad-index-bound) 1 0))
+              1))
+          rows)))))
 
 (defn ^:private slide! [text term-size state]
   (let [slide (get (:slides state) (:current-slide state))
@@ -74,6 +76,7 @@
 
 (comment
   (compute-spaces [false] 9)
+  (compute-spaces [false false false] 9)
   (compute-spaces [false false true false true] 9)
   (compute-spaces [false false true false true] 10)
 )

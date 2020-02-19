@@ -15,3 +15,16 @@ two-line title
 
  * point two
 :
+
+# slide
+A pipe character in
+front centers text
+
+|I am centered
+
+# slide
+A colon inserts
+vertical space
+:
+I am on the bottom
+(can be used multiple times)

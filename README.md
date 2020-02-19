@@ -5,7 +5,7 @@ Present is a presentation tool for creating simple text-based presentations. Pre
 
 ## Example presentation
 
-From <sample-presentations/hello-world>.
+From [sample-presentations/hello-world](sample-presentations/hello-world).
 
 ```
 @ version 1
@@ -20,11 +20,24 @@ From <sample-presentations/hello-world>.
 Some slide with a
 two-line title
 :
-* point one
- * subpoint
+ * point one
+  * subpoint
 
-* point two
+ * point two
 :
+
+# slide
+A pipe character in
+front centers text
+
+|I am centered
+
+# slide
+A colon inserts
+vertical space
+:
+I am on the bottom
+(can be used multiple times)
 ```
 
 
