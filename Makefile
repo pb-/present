@@ -1,5 +1,5 @@
 run:
-	clojure -m present.core
+	clojure -m present.core sample-presentations/hello-world
 .PHONY: run
 
 repl:

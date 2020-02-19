@@ -16,12 +16,12 @@
       {:message :load-succeeded
        :slides (into [] result)})))
 
-(comment
-  (load-presentation "sample-presentations/hello-world"))
-
-(defn -main []
+(defn -main [& args]
+  (when (empty? args)
+    (println "usage: clojure -m present.core FILE")
+    (System/exit 1))
   (let [screen (TerminalScreen. (UnixTerminal.))]
-    (swap! state-storage s/update-state (load-presentation "sample-presentations/hello-world"))
+    (swap! state-storage s/update-state (load-presentation (first args)))
     (.startScreen screen)
     (try 
       (.setCursorPosition screen nil)
