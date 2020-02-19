@@ -43,11 +43,18 @@
 (defn ^:private slide! [text term-size state]
   (let [slide (get (:slides state) (:current-slide state))
         rows (rest slide)
-        spaces (compute-spaces (map #{[:vertical-space]} rows) (.getRows term-size))]
+        spaces (compute-spaces (map #{[:vertical-space]} rows) (.getRows term-size))
+        columns (.getColumns term-size)
+        middle (fn [string columns] (quot (- columns (count string)) 2))]
     (loop [current-row 0
            [[row space] :as rows] (map vector rows spaces)]
       (when (not-empty rows)
-        (.putString text 0 current-row (str row))
+        (let [column (if (= (first row) :centered-text) (middle (second row) columns) 0)
+              string (cond (string? row) row
+                           (= (first row) :centered-text) (second row)
+                           (= row [:vertical-space]) ""
+                           :else (str row))]
+          (.putString text column current-row string))
         (recur (+ current-row space) (rest rows))))))
 
 (defn render! [screen state]
