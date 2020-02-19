@@ -2,6 +2,15 @@
 
 Present is a presentation tool for creating simple text-based presentations. Presentations are defined in a declarative text-based format and rendered to a terminal.
 
+Try it with
+
+```shell
+clojure -m present.core sample-presentations/hello-world
+
+# or simply
+make
+```
+
 
 ## Example presentation
 
@@ -64,3 +73,9 @@ make repl  # start a network repl
 
 make run   # run present
 ```
+
+
+## Future features
+
+ * Hot reload the presentation file
+ * Markup for colors
