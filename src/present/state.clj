@@ -24,13 +24,30 @@
   (apply max (map slide-min-columns slides)))
 
 (defn ^:private update-key [state message]
-  (case [(keyword (.toLowerCase (.toString (.getKeyType (:key message)))))
-         (.getCharacter (:key message))]
-    ([:escape nil] [:character \q]) (assoc state :exit true)
-    [:character \j] (update state :current-slide #(min (inc %) (dec (count (:slides state)))))
-    [:character \k] (update state :current-slide #(max (dec %) 0))
-    [:character \d] (update state :debug? not)
-    state))
+  (let [key-type (keyword (.toLowerCase (.toString (.getKeyType (:key message)))))
+        character (.getCharacter (:key message))]
+    (assoc
+      (case [key-type character]
+        ; quit
+        ([:escape nil] [:character \q])
+        (assoc state :exit true)
+        ; first slide
+        ([:character \g] [:home nil])
+        (assoc state :current-slide 0)
+        ; previous slide
+        ([:character \k] [:character \h] [:backspace \backspace] [:arrowleft nil] [:arrowup nil])
+        (update state :current-slide #(max (dec %) 0))
+        ; next slide
+        ([:character \j] [:character \l] [:character \space] [:enter \newline] [:arrowright nil] [:arrowdown nil])
+        (update state :current-slide #(min (inc %) (dec (count (:slides state)))))
+        ; last slide
+        ([:character \G] [:end nil])
+        (assoc state :current-slide (dec (count (:slides state))))
+        ; toggle debug
+        [:character \d]
+        (update state :debug? not)
+        state)
+      :last-key [key-type character])))
 
 (defn update-state [state message]
   (case (:message message)

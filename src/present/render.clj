@@ -22,8 +22,9 @@
 (defn ^:private debug! [text term-size state]
   (.setForegroundColor text TextColor$ANSI/WHITE)
   (.putString text 0 0 (str "DEBUG"))
-  (.putString text 1 1 (str "current term size " (.toString term-size)))
-  (.putString text 1 2 (format "min term size {%dx%d}" (:min-columns state) (:min-rows state))))
+  (.putString text 1 1 (str "last key " (:last-key state)))
+  (.putString text 1 2 (str "current term size " (.toString term-size)))
+  (.putString text 1 3 (format "min term size {%dx%d}" (:min-columns state) (:min-rows state))))
 
 (defn ^:private compute-spaces [rows total-space]
   (let [indexes (keep-indexed #(when %2 %1) rows)
