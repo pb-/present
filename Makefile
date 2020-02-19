@@ -1,7 +1,7 @@
 run:
-	clj -m present.core
+	clojure -m present.core
 .PHONY: run
 
 repl:
-	clj -A:nrepl
+	clojure -A:nrepl
 .PHONY: repl
