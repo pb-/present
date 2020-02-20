@@ -11,6 +11,8 @@ clojure -m present.core sample-presentations/hello-world
 make
 ```
 
+Note: Clojure **1.10** is required.
+
 
 ## Example presentation
 
@@ -66,8 +68,6 @@ Vim like, generally.
 
 ## Development
 
-A recent version of Clojure is required.
-
 ```shell
 make repl  # start a network repl
 
@@ -77,5 +77,6 @@ make run   # run present
 
 ## Future features
 
+ * Show slide number / total slides toggle
  * Hot reload the presentation file
  * Markup for colors
